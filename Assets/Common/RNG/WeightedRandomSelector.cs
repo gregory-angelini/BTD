@@ -8,6 +8,8 @@ namespace Common
     public class WeightedRandomSelector
     {
         Randomizer randomizer = new Randomizer();
+        public Randomizer Randomizer { get => randomizer; }
+
 
         public WeightedRandomSelector(int seed = -1)
         {

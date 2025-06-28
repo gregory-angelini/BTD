@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34c0eae2cda46f7489ef90e6c8647f5d, type: 3}
   m_Name: Deck
   m_EditorClassIdentifier: 
+  BackSprite: {fileID: 21300000, guid: e03493b0538df87408b7d146b97d7cf4, type: 3}
   Cards:
   - {fileID: 11400000, guid: 4df31ee140f70df4696fa5325a3a8494, type: 2}
   - {fileID: 11400000, guid: 9e8194fae43ed3d428e5845975b626f6, type: 2}

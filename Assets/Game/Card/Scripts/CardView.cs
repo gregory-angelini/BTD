@@ -10,7 +10,7 @@ namespace Game
         [SerializeField] Image cardImage;
 
 
-        public void Setup(CardProfile cardProfile)
+        public void Initialize(CardProfile cardProfile)
         {
             cardImage.sprite = cardProfile.FaceSprite;
             cardImage.SetNativeSize();
