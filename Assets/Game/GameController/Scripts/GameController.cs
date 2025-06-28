@@ -2,45 +2,52 @@ using Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Game
 {
     public class GameController : MonoBehaviour
     {
+        #region references
+        [SerializeField] GameProfile gameConfig;
         [SerializeField] Deck deck;
         [SerializeField] DeckProfile deckConfig;
-        WeightedRandomSelector weightedRandomSelector;
+        #endregion
 
 
         void Start()
         {
-            weightedRandomSelector = new WeightedRandomSelector(seed: 2);
-           
-            deck.Initialize(weightedRandomSelector.Randomizer, deckConfig);
+            List<ItemChance<CardProfile>> selectedCards = ApplyGameRules(gameConfig);
+            deck.Initialize(seed: 2, selectedCards, deckConfig);
+        }
 
-
-            IEnumerable<CardProfile> filtered = CardUtils.FilterByRank(deckConfig.Cards, Rank.Ace);
-            filtered = CardUtils.FilterBySuit(filtered, Suit.Spades);
-
-            var chances = new List<ItemChance<string>>
+        List<ItemChance<CardProfile>> ApplyGameRules(GameProfile profile)
         {
-            new() { Item = "Ace of Spades", Chance = 3.2 },
-            new() { Item = "2 of Hearts", Chance = 2.7 },
-            new() { Item = "10 of Clubs", Chance = 1.0 },
-        };
+            Dictionary<CardProfile, double> cardChanceMap = new();
 
-            Func<double, bool> validateChance = chance => chance > 0 && chance <= 100;
+            foreach (var rule in profile.Rules)
+            {
+                if (rule is CardChanceGameRuleProfile chanceRule)
+                {
+                    var matchingCards = chanceRule.Apply(deckConfig.Cards);
 
-            var weightedCards = WeightUtils.ConvertChancesToWeights(
-                chances,
-                validateChance,
-                precision: 100);
+                    foreach (var card in matchingCards)
+                    {
+                        cardChanceMap[card] = chanceRule.chance;
+                    }
+                }
+            }
 
-            
+            List<ItemChance<CardProfile>> selectedCards = cardChanceMap
+                .Select(card => new ItemChance<CardProfile>()
+                {
+                    Chance = card.Value,
+                    Item = card.Key
+                })
+                .ToList();
 
-            var drawnCard = weightedRandomSelector.PickRandom(weightedCards);
-            Debug.Log($"Drawn card: {drawnCard.Item}");
+            return selectedCards;
         }
     }
 }
