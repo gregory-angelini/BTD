@@ -406,6 +406,7 @@ MonoBehaviour:
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   activeColor: {r: 0, g: 1, b: 0, a: 1}
   isDebugEnabled: 0
+  debugDrawAllCardsButtonPrefab: {fileID: 3862458603036527733, guid: ee58433763a2c024caa40fd4e57fe074, type: 3}
 --- !u!114 &1628325230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,8 +452,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1628325229}
-        m_TargetAssemblyTypeName: GameDebug.DebugModeController, Assembly-CSharp
-        m_MethodName: ToggleDebugMode
+        m_TargetAssemblyTypeName: GameDebug.DebugModeButton, Assembly-CSharp
+        m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -827,10 +828,6 @@ PrefabInstance:
     - target: {fileID: 8062778041916308565, guid: 255a1964dad86fe45bf355f05ab5478b, type: 3}
       propertyPath: m_Name
       value: Deck
-      objectReference: {fileID: 0}
-    - target: {fileID: 8062778041916308567, guid: 255a1964dad86fe45bf355f05ab5478b, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 255a1964dad86fe45bf355f05ab5478b, type: 3}

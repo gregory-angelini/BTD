@@ -8,11 +8,12 @@ namespace Game
     public class CardView : MonoBehaviour
     {
         [SerializeField] Image cardImage;
+        [SerializeField] CanvasGroup canvasGroup;
 
 
-        public void Initialize(CardProfile cardProfile)
+        public void SetSprite(Sprite faceSprite)
         {
-            cardImage.sprite = cardProfile.FaceSprite;
+            cardImage.sprite = faceSprite;
             cardImage.SetNativeSize();
         }
     }

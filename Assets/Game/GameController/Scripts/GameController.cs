@@ -10,29 +10,19 @@ namespace Game
 {
     public class GameController : MonoBehaviour
     {
-        #region references
         [SerializeField] GameProfile gameConfig;
         [SerializeField] Deck deck;
         [SerializeField] DeckProfile deckConfig;
-        #endregion
 
 
         void Start()
         {
             var gameRuleResult = ApplyGameRules(gameConfig);
             
-            List<ItemChance<CardProfile>> selectedCards = gameRuleResult.CardChances
-                .Select(card => new ItemChance<CardProfile>()
-                {
-                    Chance = card.Value,
-                    Item = card.Key
-                })
-                .ToList();
-
             deck.Initialize(
                 gameConfig.Seed, 
-                gameConfig.WeightScaleFactor, 
-                selectedCards, 
+                gameConfig.WeightScaleFactor,
+                gameRuleResult.CardChances, 
                 deckConfig);
         }
 
