@@ -29,7 +29,11 @@ namespace Game
                 })
                 .ToList();
 
-            deck.Initialize(seed: 2, gameConfig.WeightScaleFactor, selectedCards, deckConfig);
+            deck.Initialize(
+                gameConfig.Seed, 
+                gameConfig.WeightScaleFactor, 
+                selectedCards, 
+                deckConfig);
         }
 
         GameRuleResult ApplyGameRules(GameProfile profile)

@@ -2,39 +2,40 @@ using Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 namespace Game
 {
     public class Deck : MonoBehaviour
     {
+        public event Action<int> OnDeckChanged;
+
         WeightedRandomSelector weightedRandomSelector;
-        List<CardProfile> cards = new();
-        List<ItemChance<CardProfile>> chances = new();
+        List<ItemChance<CardProfile>> cardChances = new();
         int weightScaleFactor;
 
         #region references
         [SerializeField] Image backImage;
         #endregion
 
-        public int AmountOfCards => cards.Count;
+        public int Size => cardChances.Count;
 
 
-        public void Initialize(int seed, int weightScaleFactor, List<ItemChance<CardProfile>> chances, DeckProfile deckConfig)
+        public void Initialize(int seed, int weightScaleFactor, List<ItemChance<CardProfile>> cardChances, DeckProfile deckConfig)
         {
             weightedRandomSelector = new WeightedRandomSelector(seed);
            
             this.weightScaleFactor = weightScaleFactor;
-            this.chances = chances;
-            cards = new List<CardProfile>(deckConfig.Cards);
-
+            this.cardChances = new List<ItemChance<CardProfile>>(cardChances);
+       
             SetCardBack(deckConfig.BackSprite);
 
             Shuffle();
         }
-
-        
+   
         void SetCardBack(Sprite backSprite)
         {
             backImage.sprite = backSprite;
@@ -43,21 +44,26 @@ namespace Game
 
         public void Shuffle()
         {
-            for (int i = 0; i < cards.Count; i++)
+            for (int i = 0; i < cardChances.Count; i++)
             {
-                int randomIndex = weightedRandomSelector.Randomizer.RandomRange(i, cards.Count);
-                (cards[i], cards[randomIndex]) = (cards[randomIndex], cards[i]);
+                int randomIndex = weightedRandomSelector.Randomizer.RandomRange(i, cardChances.Count);
+                (cardChances[i], cardChances[randomIndex]) = (cardChances[randomIndex], cardChances[i]);
             }
+        }
+
+        void NotifyDeckChanged()
+        {
+            OnDeckChanged?.Invoke(Size);
         }
 
         public bool IsEmpty()
         {
-            return cards.Count == 0;
+            return cardChances.Count == 0;
         }
 
         public CardProfile DrawCard()
         {
-            if (cards.Count == 0)
+            if (IsEmpty())
             {
                 Debug.LogWarning("Deck is empty!");
                 return null;
@@ -66,12 +72,21 @@ namespace Game
             Func<double, bool> validateChance = chance => chance > 0 && chance <= 100;
 
             var weightedCards = WeightUtils.ConvertChancesToWeights(
-                chances,
+                cardChances,
                 validateChance,
                 weightScaleFactor);
 
             var drawnCard = weightedRandomSelector.PickRandom(weightedCards);
             Debug.Log($"Drawn card: {drawnCard.Item}");
+
+            #region remove drawn card from deck
+            var foundCard = cardChances.Find(cardChance => cardChance.Item == drawnCard.Item);
+
+            Assert.IsNotNull(foundCard, $"foundCard is null");
+            cardChances.Remove(foundCard);
+            #endregion
+
+            NotifyDeckChanged();
             return drawnCard.Item;
         }
     }

@@ -8,6 +8,7 @@ namespace Game
     [CreateAssetMenu(fileName = "GameProfile", menuName = "Game/GameProfile")]
     public class GameProfile : ScriptableObject
     {
+        public int Seed;
         public int WeightScaleFactor;
         public GameRuleProfile[] Rules;
     }

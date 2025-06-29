@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e219e9e12b0764e872d6c2c481c3df, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
+  Seed: 2
   WeightScaleFactor: 100
   Rules:
   - {fileID: 11400000, guid: 09406443b69725f4386122e0b196baba, type: 2}
