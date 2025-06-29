@@ -30,6 +30,18 @@ namespace GameDebug
             }
         }
 
+        public void AddCard(CardProfile card)
+        {
+            if (cardContainer.transform.childCount == 0)
+            {
+                Sprite sprite = card.FaceSprite;
+                SetCellSizeBySprite(sprite, cardScale);
+            }
+
+            var cardView = Instantiate(cardViewPrefab, cardContainer);
+            cardView.SetSprite(card.FaceSprite);   
+        }
+
         void SetCellSizeBySprite(Sprite sprite, float scale)
         {
             if (sprite == null) return;
@@ -48,7 +60,7 @@ namespace GameDebug
             cardContainerGridLayoutGroup.cellSize = new Vector2(scaledWidth, scaledHeight);
         }
 
-        void Clear()
+        public void Clear()
         {
             foreach (Transform child in cardContainer)
                 Destroy(child.gameObject);

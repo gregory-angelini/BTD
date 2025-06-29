@@ -54,9 +54,10 @@ namespace Game
             }
         }
 
-        void NotifyDeckChanged()
+        void NotifyDeckChanged(int newSize)
         {
-            OnDeckChangedEvent?.Invoke(Size);
+            OnDeckChanged(newSize);
+            OnDeckChangedEvent?.Invoke(newSize);
         }
 
         public bool IsEmpty()
@@ -85,22 +86,12 @@ namespace Game
             #region remove drawn card from deck
             var foundCard = cardChances.Find(cardChance => cardChance.Item == drawnCard.Item);
 
-            Assert.IsNotNull(foundCard, $"foundCard is null");
+            Assert.IsNotNull(foundCard, $"Drawn card not found!");
             cardChances.Remove(foundCard);
             #endregion
 
-            NotifyDeckChanged();
+            NotifyDeckChanged(Size);
             return drawnCard.Item;
-        }
-
-        void OnEnable()
-        {
-            OnDeckChangedEvent += OnDeckChanged;
-        }
-
-        void OnDisable()
-        {
-            OnDeckChangedEvent -= OnDeckChanged;
         }
 
         void OnDeckChanged(int newSize)

@@ -48,16 +48,18 @@ namespace GameDebug
             deckViewer = Instantiate(deckViewerPrefab);
             deckViewer.transform.SetParent(canvas.transform, false);
 
-            var allCards = new List<CardProfile>();
+            StartCoroutine(DrawCard(0.05f));
+        }
 
+        IEnumerator DrawCard(float nextCardDelay)
+        {
             while (!deck.IsEmpty())
             {
                 var card = deck.DrawCard();
-                
-                allCards.Add(card);
-            }
+                deckViewer.AddCard(card);
 
-            deckViewer.DisplayCards(allCards);
+                yield return new WaitForSeconds(nextCardDelay);
+            }
         }
     }
 }
