@@ -7,6 +7,7 @@ namespace Game
 {
     public abstract class GameRuleProfile : ScriptableObject
     {
-        public abstract IEnumerable<CardProfile> Apply(CardProfile[] cards);
+        public abstract RuleType Type { get; }
+        public abstract IEnumerable<CardProfile> Apply(IEnumerable<CardProfile> cards);
     }
 }

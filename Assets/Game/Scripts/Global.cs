@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 namespace Game
 {
+    public enum RuleType
+    {
+        Modify_Set,
+        Modify_Value
+    }
+
     public enum Suit
     {
         Hearts,

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
 namespace Game
 {
     public class GameController : MonoBehaviour
@@ -18,28 +19,9 @@ namespace Game
 
         void Start()
         {
-            List<ItemChance<CardProfile>> selectedCards = ApplyGameRules(gameConfig);
-            deck.Initialize(seed: 2, selectedCards, deckConfig);
-        }
-
-        List<ItemChance<CardProfile>> ApplyGameRules(GameProfile profile)
-        {
-            Dictionary<CardProfile, double> cardChanceMap = new();
-
-            foreach (var rule in profile.Rules)
-            {
-                if (rule is CardChanceGameRuleProfile chanceRule)
-                {
-                    var matchingCards = chanceRule.Apply(deckConfig.Cards);
-
-                    foreach (var card in matchingCards)
-                    {
-                        cardChanceMap[card] = chanceRule.chance;
-                    }
-                }
-            }
-
-            List<ItemChance<CardProfile>> selectedCards = cardChanceMap
+            var gameRuleResult = ApplyGameRules(gameConfig);
+            
+            List<ItemChance<CardProfile>> selectedCards = gameRuleResult.CardChances
                 .Select(card => new ItemChance<CardProfile>()
                 {
                     Chance = card.Value,
@@ -47,7 +29,49 @@ namespace Game
                 })
                 .ToList();
 
-            return selectedCards;
+            deck.Initialize(seed: 2, gameConfig.WeightScaleFactor, selectedCards, deckConfig);
+        }
+
+        GameRuleResult ApplyGameRules(GameProfile profile)
+        {
+            IEnumerable<CardProfile> currentPool = deckConfig.Cards;
+            var cardChances = new Dictionary<CardProfile, double>();
+
+            foreach (var rule in profile.Rules)
+            {
+                switch (rule.Type)
+                {
+                    case RuleType.Modify_Set:
+                        {
+                            currentPool = rule.Apply(currentPool);
+                            break;
+                        }
+
+                    case RuleType.Modify_Value:
+                        {
+                            if (rule is CardChanceGameRuleProfile chanceRule)
+                            {
+                                var matchingCards = chanceRule.Apply(currentPool);
+
+                                foreach (var card in matchingCards)
+                                {
+                                    cardChances[card] = chanceRule.chance;
+                                }
+                            }
+                            break;
+                        }
+                }
+            }
+
+            cardChances = cardChances
+                .Where(cardChance => currentPool.Contains(cardChance.Key))
+                .ToDictionary(cardChance => cardChance.Key, cardChance => cardChance.Value);
+
+            return new GameRuleResult()
+            {
+                Cards = currentPool.ToArray(),
+                CardChances = cardChances
+            };
         }
     }
 }

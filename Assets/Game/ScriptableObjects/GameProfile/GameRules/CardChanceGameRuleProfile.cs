@@ -13,15 +13,14 @@ namespace Game
         public Suit[] suits;
         public double chance;
 
-        public override IEnumerable<CardProfile> Apply(CardProfile[] cards)
-        {
-            var result = cards
-                .Where(card => (ranks.Length == 0 || ranks.Contains(card.Rank)) &&
-                               (suits.Length == 0 || suits.Contains(card.Suit)))
-                .ToArray();
+        public override RuleType Type => RuleType.Modify_Value;
 
-            foreach (var card in result)
-                yield return card;
+        public override IEnumerable<CardProfile> Apply(IEnumerable<CardProfile> cards)
+        {
+            return cards
+                .Where(card =>
+                (suits.Length == 0 || suits.Contains(card.Suit)) &&
+                (ranks.Length == 0 || ranks.Contains(card.Rank)));
         }
     }
 }

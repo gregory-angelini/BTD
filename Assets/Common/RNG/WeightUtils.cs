@@ -7,13 +7,13 @@ namespace Common
 {
     public class WeightUtils
     {
-        public static List<WeightedItem<T>> ConvertChancesToWeights<T>(List<ItemChance<T>> items, Func<double, bool> isValidChance, int precision = 100)
+        public static List<WeightedItem<T>> ConvertChancesToWeights<T>(List<ItemChance<T>> items, Func<double, bool> isValidChance, int weightScaleFactor = 100)
         {
             if (items == null || items.Count == 0)
                 throw new ArgumentException("Item list is null or empty.");
 
-            if (precision <= 0)
-                throw new ArgumentException($"Precision ({precision}) must be greater than zero.");
+            if (weightScaleFactor <= 0)
+                throw new ArgumentException($"Weight Scale Factor ({weightScaleFactor}) must be greater than zero.");
 
             List<WeightedItem<T>> weightedItems = new();
 
@@ -24,7 +24,7 @@ namespace Common
                 if (!isValidChance(chance))
                     throw new ArgumentException($"Invalid chance ({chance}) value for item: {item}");
 
-                int weight = (int)Math.Round(chance * precision);
+                int weight = (int)Math.Round(chance * weightScaleFactor);
                 
                 if (weight <= 0)
                     throw new ArgumentException($"Weight must be greater than zero for item: {item}");

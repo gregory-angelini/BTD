@@ -12,10 +12,7 @@ namespace Game
         WeightedRandomSelector weightedRandomSelector;
         List<CardProfile> cards = new();
         List<ItemChance<CardProfile>> chances = new();
-
-        #region settings
-        [SerializeField] int precision = 100;
-        #endregion
+        int weightScaleFactor;
 
         #region references
         [SerializeField] Image backImage;
@@ -24,10 +21,11 @@ namespace Game
         public int AmountOfCards => cards.Count;
 
 
-        public void Initialize(int seed, List<ItemChance<CardProfile>> chances, DeckProfile deckConfig)
+        public void Initialize(int seed, int weightScaleFactor, List<ItemChance<CardProfile>> chances, DeckProfile deckConfig)
         {
             weightedRandomSelector = new WeightedRandomSelector(seed);
-
+           
+            this.weightScaleFactor = weightScaleFactor;
             this.chances = chances;
             cards = new List<CardProfile>(deckConfig.Cards);
 
@@ -70,7 +68,7 @@ namespace Game
             var weightedCards = WeightUtils.ConvertChancesToWeights(
                 chances,
                 validateChance,
-                precision);
+                weightScaleFactor);
 
             var drawnCard = weightedRandomSelector.PickRandom(weightedCards);
             Debug.Log($"Drawn card: {drawnCard.Item}");
