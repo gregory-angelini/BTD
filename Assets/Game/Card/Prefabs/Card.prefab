@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardImage: {fileID: 4866869587189956252}
+  visualSettings: {fileID: 11400000, guid: 4af73fc9cb174b0438477bab9718b12c, type: 2}
 --- !u!114 &5346354883488633197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,4 +105,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 6413983768164661576}
-  speedUnitsPerSecond: 1000

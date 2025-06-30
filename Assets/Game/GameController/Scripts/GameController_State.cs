@@ -59,11 +59,19 @@ namespace Game
             var cardProfile = deck.DrawCard();
             var card = objectPool.Get();
            
-            card.Setup(cardProfile);
+            card.Setup(
+                cardProfile, 
+                deckConfig.BackSprite, 
+                isFaceUp: false);
+
             card.SetParent(deck.transform.parent);
             card.SetPosition(deck.GetPosition());
-            card.SetScale(0.3f);
-            card.Move(dealerSide.localPosition, animate: true);
+            card.SetScale(visualSettings.CardScale);
+
+            card.View.Move(
+                dealerSide.localPosition, 
+                animate: true, 
+                onComplete: () => card.Flip(animate: true));
 
             TransitionToState(GameState.Await_Player_Bet);
         }

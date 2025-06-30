@@ -10,6 +10,7 @@ namespace Game
     public partial class GameController : MonoBehaviour
     {
         [SerializeField] GameProfile gameConfig;
+        [SerializeField] VisualSettingsProfile visualSettings;
         [SerializeField] Deck deck;
         [SerializeField] DeckProfile deckConfig;
 

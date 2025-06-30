@@ -159,7 +159,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: TopCard
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5346354883488633197, guid: 39bcd6fb9d96e994f882d9284f8576d8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 39bcd6fb9d96e994f882d9284f8576d8, type: 3}
 --- !u!1 &531665923756154052 stripped
 GameObject:

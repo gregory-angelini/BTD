@@ -1,26 +1,46 @@
-﻿using DG.Tweening;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 namespace Game
 {
     public class Card : MonoBehaviour
     {
         [SerializeField] CardView view;
-        [SerializeField] float speedUnitsPerSecond = 10f;
+        public CardView View { get => view; }
         CardProfile cardProfile;
-        Tween moveTween;
+        public CardProfile CardProfile { get => cardProfile; }
 
+        bool isFaceUp = false;
+        public bool IsFaceUp 
+        { 
+            get
+            {
+                return isFaceUp;
+            }
+            set
+            {
+                isFaceUp = value;
+
+                if (isFaceUp)
+                    View.SetSprite(CardProfile.FaceSprite);
+                else 
+                    View.SetSprite(View.BackSprite);
+            }
+        }
         public Suit Suit { get => cardProfile.Suit; }
         public Rank Rank { get => cardProfile.Rank; }
 
 
-        public void Setup(CardProfile cardProfile)
+        public void Setup(CardProfile cardProfile, Sprite backSprite, bool isFaceUp)
         {
             this.cardProfile = cardProfile;
 
-            view.SetSprite(cardProfile.FaceSprite);
+            view.SetFaceSprite(cardProfile.FaceSprite);
+            view.SetBackSprite(backSprite);
+
+            IsFaceUp = isFaceUp;
         }
 
         public override string ToString()
@@ -53,23 +73,20 @@ namespace Game
             return transform.localScale.x;
         }
 
-        public void Move(Vector2 target, bool animate)
+        public void Flip(bool animate)
         {
-            if (animate)
-            {
-                moveTween?.Kill();
-
-                float distance = Vector3.Distance(GetPosition(), target);
-                float duration = distance / speedUnitsPerSecond;
-
-                moveTween = transform
-                    .DOLocalMove(target, duration)
-                    .SetEase(Ease.OutQuad);
-            }
+            if (!IsFaceUp)
+                View.Flip(animate, CardProfile.FaceSprite);
             else
-            {
-                transform.localPosition = target;
-            }
+                View.Flip(animate, View.BackSprite);
+
+            isFaceUp = !IsFaceUp;
+        }
+
+        [ContextMenu("Flip Test")]
+        public void FlipTest()
+        {
+            Flip(animate: true);
         }
     }
 }
