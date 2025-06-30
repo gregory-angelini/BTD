@@ -20,15 +20,20 @@ namespace GameDebug
 
             CreateLabel();
             OnDeckSizeChanged(deck.Size);
+        }
 
-            deck.OnDeckChangedEvent += OnDeckSizeChanged;
+        void OnEnable()
+        {
+            GameEvents.OnDeckChangedEvent += OnDeckSizeChanged;
+        }
+
+        void OnDisable()
+        {
+            GameEvents.OnDeckChangedEvent -= OnDeckSizeChanged;
         }
 
         void OnDestroy()
         {
-            if (deck != null)
-                deck.OnDeckChangedEvent -= OnDeckSizeChanged;
-
             if (deckSizeLabel != null)
                 Destroy(deckSizeLabel.gameObject);
         }

@@ -12,8 +12,6 @@ namespace Game
 {
     public class Deck : MonoBehaviour
     {
-        public event Action<int> OnDeckChangedEvent;
-
         WeightedRandomSelector weightedRandomSelector;
         List<ItemChance<CardProfile>> cardChances = new();
         List<ItemChance<CardProfile>> originalChances = new();
@@ -69,7 +67,8 @@ namespace Game
         void NotifyDeckChanged(int newSize)
         {
             OnDeckChanged(newSize);
-            OnDeckChangedEvent?.Invoke(newSize);
+
+            GameEvents.EmitDeckChangedEvent(newSize);
         }
 
         public bool IsEmpty()

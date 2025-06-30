@@ -15,6 +15,8 @@ namespace Game
         [SerializeField] Transform playerSide;
         [SerializeField] Transform dealerSide;
         BetType playerBet = BetType.No_Bet;
+        Card playerCard;
+        Card dealerCard;
 
 
         void SetState(GameState newState)
@@ -37,6 +39,10 @@ namespace Game
                     StartGame(newState); 
                     break;
 
+                case GameState.New_Round:
+                    NewRound(newState);
+                    break;
+
                 case GameState.Show_Dealer_Card:
                     ShowDealerCard(newState); 
                     break;
@@ -46,17 +52,85 @@ namespace Game
                     break;
 
                 case GameState.Show_Player_Card:
-                    //DealToPlayer(); 
+                    ShowPlayerCard(newState); 
                     break;
 
                 case GameState.Resolve_Bet_Result:
-                    //ResolveBet(); 
+                    ResolveBetResult(newState); 
                     break;
 
-                case GameState.Restart:
-                    //Restart(); 
+                case GameState.Tie:
+                    Tie(newState);
+                    break;
+
+                case GameState.Player_Win:
+                    PlayerWin(newState);
+                    break;
+
+                case GameState.Dealer_Win:
+                    DealerWin(newState);
+                    break;
+
+                case GameState.Round_Ended:
+                    RoundEnded(newState);
+                    break;
+
+                case GameState.Deck_Empty:
+                    //DeckEmpty(Next_Round); 
                     break;
             }
+        }
+
+        void NewRound(GameState newState)
+        {
+            SetState(newState);
+            TransitionToState(GameState.Show_Dealer_Card);
+        }
+
+        void RoundEnded(GameState newState)
+        {
+            SetState(newState);
+            TransitionToState(GameState.Round_Ended);
+        }
+
+        void Tie(GameState newState)
+        {
+            SetState(newState);
+            TransitionToState(GameState.Round_Ended);
+        }
+
+        void PlayerWin(GameState newState)
+        {
+            SetState(newState);
+            TransitionToState(GameState.Round_Ended);
+        }
+
+        void DealerWin(GameState newState)
+        {
+            SetState(newState);
+            TransitionToState(GameState.Round_Ended);
+        }
+
+        void ResolveBetResult(GameState newState)
+        {
+            int dealerRank = (int)dealerCard.Rank;
+            int playerRank = (int)playerCard.Rank;
+
+            if (playerRank == dealerRank)
+            {
+                SetState(newState);
+                TransitionToState(GameState.Tie);
+                return;
+            }
+
+            bool isPlayerWon =
+                (playerBet == BetType.Higher && playerRank > dealerRank) ||
+                (playerBet == BetType.Lower && playerRank < dealerRank);
+
+            GameState nextState = isPlayerWon ? GameState.Player_Win : GameState.Dealer_Win;
+
+            SetState(newState);
+            TransitionToState(nextState);
         }
 
         void AwaitBet(GameState newState)
@@ -64,28 +138,67 @@ namespace Game
             SetState(newState);
         }
 
+        void ShowPlayerCard(GameState newState)
+        {
+            DrawCard(
+                newState,
+                onComplete: (card) =>
+                {
+                    card.Flip(animate: true);
+                    SetState(newState);
+                    TransitionToState(GameState.Resolve_Bet_Result);
+                });
+        }
+
         void ShowDealerCard(GameState newState)
+        {
+            DrawCard(
+                newState,
+                onComplete: (card) =>
+                {
+                    card.Flip(animate: true);
+                    SetState(newState);
+                    TransitionToState(GameState.Await_Player_Bet);
+                });
+        }
+
+        void DrawCard(GameState newState, Action<Card> onComplete)
         {
             var cardProfile = deck.DrawCard();
             var card = objectPool.Get();
-           
+
             card.Setup(
-                cardProfile, 
-                deckConfig.BackSprite, 
+                cardProfile,
+                deckConfig.BackSprite,
                 isFaceUp: false);
 
             card.SetParent(deck.transform.parent);
             card.SetPosition(deck.GetPosition());
             card.SetScale(visualSettings.CardScale);
+            Vector3 cardTargetPos;
+
+            switch (newState)
+            {
+                case GameState.Show_Dealer_Card:
+                    cardTargetPos = dealerSide.localPosition;
+                    dealerCard = card;
+                    break;
+
+                case GameState.Show_Player_Card:
+                    playerCard = card;
+                    cardTargetPos = playerSide.localPosition;
+                    break;
+
+                default:
+                    throw new ArgumentException($"Game state ({newState.ToString()}) is invalid.");
+            }
 
             card.View.Move(
-                dealerSide.localPosition, 
-                animate: true, 
+                cardTargetPos,
+                animate: true,
                 onComplete: () =>
                 {
-                    card.Flip(animate: true);
-                    SetState(newState);
-                    TransitionToState(GameState.Await_Player_Bet);
+                    onComplete?.Invoke(card);
                 });
         }
 
@@ -112,7 +225,7 @@ namespace Game
 
             SetState(newState);
 
-            TransitionToState(GameState.Show_Dealer_Card);
+            TransitionToState(GameState.New_Round);
         }
     }
 }

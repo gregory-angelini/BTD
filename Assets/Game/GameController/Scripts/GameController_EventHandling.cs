@@ -12,11 +12,13 @@ namespace Game
         void OnEnable()
         {
             GameEvents.OnBetPlacedEvent += OnBetPlaced;
+            GameEvents.OnTryAgainEvent += OnTryAgain;
         }
 
         void OnDisable()
         {
             GameEvents.OnBetPlacedEvent -= OnBetPlaced;
+            GameEvents.OnTryAgainEvent -= OnTryAgain;
         }
 
         void OnBetPlaced(BetType bet)
@@ -26,7 +28,12 @@ namespace Game
 
             playerBet = bet;
 
-            SetState(GameState.Show_Player_Card);
+            TransitionToState(GameState.Show_Player_Card);
+        }
+
+        void OnTryAgain()
+        {
+            TransitionToState(GameState.New_Round);
         }
     }
 }

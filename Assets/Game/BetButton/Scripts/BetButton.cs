@@ -37,7 +37,9 @@ namespace Game
             
             switch (state)
             {
+                case GameState.Initialize:
                 case GameState.Start:
+                case GameState.New_Round:
                     ResetButton();
                     break;
             }

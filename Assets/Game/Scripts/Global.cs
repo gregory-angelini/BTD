@@ -18,7 +18,12 @@ namespace Game
         Await_Player_Bet,
         Show_Player_Card,
         Resolve_Bet_Result,
-        Restart
+        Player_Win,
+        Dealer_Win,
+        Tie,
+        Round_Ended,
+        New_Round,
+        Deck_Empty
     }
 
     public enum RuleType

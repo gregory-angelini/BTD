@@ -36,7 +36,13 @@ namespace Game
         {
             if (animate)
             {
-                moveTween?.Kill();
+                if (moveTween != null)
+                {
+                    if (moveTween.IsActive() && !moveTween.IsComplete())
+                    {
+                        moveTween.Complete();
+                    }
+                }
 
                 float distance = Vector3.Distance(
                     transform.localPosition, 

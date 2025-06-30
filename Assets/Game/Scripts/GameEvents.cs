@@ -6,7 +6,19 @@ namespace Game
     {
         public static event Action<GameState> OnGameStateChangedEvent;
         public static event Action<BetType> OnBetPlacedEvent;
+        public static event Action OnTryAgainEvent;
+        public static event Action<int> OnDeckChangedEvent;
 
+
+        public static void EmitDeckChangedEvent(int newSize)
+        {
+            OnDeckChangedEvent?.Invoke(newSize);
+        }
+
+        public static void EmitTryAgainEvent()
+        {
+            OnTryAgainEvent?.Invoke();
+        }
 
         public static void EmitGameStateChangedEvent(GameState gameState)
         {
