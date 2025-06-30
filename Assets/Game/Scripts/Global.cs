@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 namespace Game
 {
+    public enum BetType
+    {
+        No_Bet,
+        Lower,
+        Higher
+    }
     public enum GameState
     {
         Initialize,

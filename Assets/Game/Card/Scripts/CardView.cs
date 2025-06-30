@@ -58,6 +58,8 @@ namespace Game
         
         public void Flip(bool animate, Sprite sprite)
         {
+            animate = false;
+
             if (animate)
             {
                 float halfDuration = visualSettings.CardFlipDuration / 2f;
@@ -77,7 +79,7 @@ namespace Game
             {
                 cardImage.sprite = sprite;
 
-                transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+                transform.localRotation *= Quaternion.Euler(0f, 180f, 0f);
             }
         }
     }
