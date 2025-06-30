@@ -13,7 +13,7 @@ namespace GameDebug
         [SerializeField] float cardScale = 0.25f; 
 
 
-        public void DisplayCards(List<CardProfile> cards)
+        public void AddCards(List<CardProfile> cards)
         {
             if (cards == null || cards.Count == 0) 
                 return;

@@ -64,28 +64,29 @@ namespace Game
         
         public void Flip(bool animate, Sprite sprite)
         {
-            animate = false;
-
             if (animate)
             {
                 float halfDuration = visualSettings.CardFlipDuration / 2f;
-
-                transform.DOLocalRotate(new Vector3(0f, 90f, 0f), halfDuration)
+ 
+                transform
+                    .DOLocalRotate(new Vector3(0f, 90f, 0f), halfDuration)
                     .SetEase(visualSettings.CardFlipEase)
                     .OnComplete(() =>
                     {
                         cardImage.sprite = sprite;
 
-                        transform.DOLocalRotate(new Vector3(0f, 0f, 0f), halfDuration)
-                            .From(new Vector3(0f, 270f, 0f))
-                            .SetEase(visualSettings.CardFlipEase);
+                        transform
+                        .DOLocalRotate(new Vector3(0f, 90f, 0f), halfDuration)
+                        .SetEase(visualSettings.CardFlipEase)
+                        .OnComplete(() =>
+                        {
+                            transform.localRotation = Quaternion.identity;              
+                        });
                     });
             }
             else
             {
                 cardImage.sprite = sprite;
-
-                transform.localRotation *= Quaternion.Euler(0f, 180f, 0f);
             }
         }
     }

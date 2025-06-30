@@ -17,6 +17,7 @@ namespace Game
         BetType playerBet = BetType.No_Bet;
         Card playerCard;
         Card dealerCard;
+        List<Card> createdCards = new List<Card>();
 
 
         void SetState(GameState newState)
@@ -83,6 +84,12 @@ namespace Game
 
         void NewRound(GameState newState)
         {
+            foreach (var card in createdCards)
+            {
+                objectPool.Return(card);
+            }
+            createdCards.Clear();
+
             SetState(newState);
             TransitionToState(GameState.Show_Dealer_Card);
         }
@@ -90,7 +97,6 @@ namespace Game
         void RoundEnded(GameState newState)
         {
             SetState(newState);
-            TransitionToState(GameState.Round_Ended);
         }
 
         void Tie(GameState newState)
@@ -166,6 +172,7 @@ namespace Game
         {
             var cardProfile = deck.DrawCard();
             var card = objectPool.Get();
+            createdCards.Add(card);
 
             card.Setup(
                 cardProfile,
