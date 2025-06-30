@@ -8,7 +8,6 @@ namespace Game
     public class CardView : MonoBehaviour
     {
         [SerializeField] Image cardImage;
-        [SerializeField] CanvasGroup canvasGroup;
 
 
         public void SetSprite(Sprite faceSprite)

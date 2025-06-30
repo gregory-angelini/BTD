@@ -47,3 +47,6 @@ MonoBehaviour:
   gameConfig: {fileID: 11400000, guid: 74909213eadfd6f409ecdf0e17761720, type: 2}
   deck: {fileID: 0}
   deckConfig: {fileID: 11400000, guid: 45774f2d60dbfdb43b07a3724c95ba73, type: 2}
+  cardPrefab: {fileID: 5346354883488633197, guid: 39bcd6fb9d96e994f882d9284f8576d8, type: 3}
+  playerSide: {fileID: 0}
+  dealerSide: {fileID: 0}

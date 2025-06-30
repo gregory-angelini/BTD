@@ -16,18 +16,20 @@ namespace Game
 
         WeightedRandomSelector weightedRandomSelector;
         List<ItemChance<CardProfile>> cardChances = new();
-        int weightScaleFactor;
+        List<ItemChance<CardProfile>> originalChances = new();
         [SerializeField] CardView cardView;
+        int weightScaleFactor;
+        bool isInitialized = false;
 
         public int Size => cardChances.Count;
 
 
         public void Initialize(int seed, int weightScaleFactor, Dictionary<CardProfile, double> cardChances, DeckProfile deckConfig)
         {
-            weightedRandomSelector = new WeightedRandomSelector(seed);
-           
+            weightedRandomSelector = new WeightedRandomSelector(seed);         
             this.weightScaleFactor = weightScaleFactor;
-            this.cardChances = cardChances
+
+            originalChances = cardChances
                 .Select(card => new ItemChance<CardProfile>()
                 {
                     Chance = card.Value,
@@ -36,10 +38,20 @@ namespace Game
                 .ToList();
 
             SetCardBack(deckConfig.BackSprite);
+            isInitialized = true;
+        }
+
+        public void ResetDeck()
+        {
+            if (!isInitialized) 
+                return;
+
+            cardChances.Clear();
+            cardChances.AddRange(originalChances);
 
             Shuffle();
         }
-   
+
         void SetCardBack(Sprite backSprite)
         {
             cardView.SetSprite(backSprite);
@@ -107,6 +119,11 @@ namespace Game
             {
                 cardViewCanvasGroup.alpha = 0f;
             }
+        }
+
+        public Vector2 GetPosition()
+        {
+            return transform.localPosition;
         }
     }
 }

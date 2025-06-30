@@ -4,6 +4,17 @@ using System.Collections.Generic;
 
 namespace Game
 {
+    public enum GameState
+    {
+        Initialize,
+        Start,
+        Show_Dealer_Card,
+        Await_Player_Bet,
+        Show_Player_Card,
+        Resolve_Bet_Result,
+        Restart
+    }
+
     public enum RuleType
     {
         Modify_Set,

@@ -1,4 +1,3 @@
-using Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class GameController : MonoBehaviour
+    public partial class GameController : MonoBehaviour
     {
         [SerializeField] GameProfile gameConfig;
         [SerializeField] Deck deck;
@@ -17,13 +16,7 @@ namespace Game
 
         void Start()
         {
-            var gameRuleResult = ApplyGameRules(gameConfig);
-            
-            deck.Initialize(
-                gameConfig.Seed, 
-                gameConfig.WeightScaleFactor,
-                gameRuleResult.CardChances, 
-                deckConfig);
+            TransitionToState(GameState.Initialize);
         }
 
         GameRuleResult ApplyGameRules(GameProfile profile)
