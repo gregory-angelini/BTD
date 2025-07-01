@@ -27,7 +27,7 @@ namespace Game
             GameEvents.EmitGameStateChangedEvent(newState);
         }
 
-        public void TransitionToState(GameState newState)
+        void TransitionToState(GameState newState)
         {
             switch (newState)
             {
@@ -97,9 +97,6 @@ namespace Game
         void RoundEnded(GameState newState)
         {
             SetState(newState);
-
-            if (deck.IsEmpty())
-                TransitionToState(GameState.Deck_Empty);
         }
 
         void Tie(GameState newState)

@@ -33,12 +33,22 @@ namespace GameDebug
 
         void OnDestroy()
         {
+            DestroyDeckViewer();
+        }
+
+        void DestroyDeckViewer()
+        {
             if (deckViewer != null)
+            {
                 Destroy(deckViewer.gameObject);
+                deckViewer = null;
+            }
         }
 
         public void OnClick()
         {
+            DestroyDeckViewer();
+
             if (deck.IsEmpty())
             {
                 Debug.LogWarning("Deck is empty!");
@@ -60,6 +70,8 @@ namespace GameDebug
 
                 yield return new WaitForSeconds(nextCardDelay);
             }
+
+
         }
     }
 }

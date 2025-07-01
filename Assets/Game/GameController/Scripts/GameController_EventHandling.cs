@@ -14,6 +14,7 @@ namespace Game
             GameEvents.OnTryAgainEvent += OnTryAgain;
             GameEvents.OnStartEvent += OnStart;
             GameEvents.OnRestartEvent += OnRestart;
+            GameEvents.OnDeckChangedEvent += OnDeckChanged;
         }
 
         void OnDisable()
@@ -22,9 +23,16 @@ namespace Game
             GameEvents.OnTryAgainEvent -= OnTryAgain;
             GameEvents.OnStartEvent -= OnStart;
             GameEvents.OnRestartEvent -= OnRestart;
+            GameEvents.OnDeckChangedEvent -= OnDeckChanged;
         }
 
-        public void OnStart()
+        void OnDeckChanged(int newSize)
+        {
+            if (newSize == 0)
+                TransitionToState(GameState.Deck_Empty);
+        }
+        
+        void OnStart()
         {
             if (CurrentState != GameState.Initialize)
                 return;
@@ -32,7 +40,7 @@ namespace Game
             TransitionToState(GameState.Start);
         }
 
-        public void OnRestart()
+        void OnRestart()
         {
             if (CurrentState != GameState.Deck_Empty)
                 return;
