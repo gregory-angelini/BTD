@@ -15,6 +15,7 @@ namespace Game
         [SerializeField] DeckProfile deckConfig;
         [SerializeField] PlayerArea playerArea;
         [SerializeField] PlayerArea dealerArea;
+        public bool SkipAnims { get; set; } = false;
 
 
         void Start()

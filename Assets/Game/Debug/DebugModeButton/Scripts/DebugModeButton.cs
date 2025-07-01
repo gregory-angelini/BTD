@@ -18,6 +18,21 @@ namespace GameDebug
 
         [SerializeField] DebugDrawAllCardsButton debugDrawAllCardsButtonPrefab;
         DebugDrawAllCardsButton debugDrawAllCardsButton;
+        [SerializeField] DebugQuickRoundButton debugQuickRoundButtonPrefab;
+        DebugQuickRoundButton debugQuickRoundButton;
+
+        GameController gameController;
+
+
+        void Start()
+        {
+            gameController = FindObjectOfType<GameController>();
+
+            if (gameController == null)
+            {
+                Debug.LogError("Game Controller not found!");
+            }
+        }
 
         public void OnClick()
         {
@@ -31,12 +46,42 @@ namespace GameDebug
 
             EnableDeckDebug(isDebugEnabled);
             EnableDebugDrawAllCardsButton(isDebugEnabled);
+            EnableDebugQuickRoundButton(isDebugEnabled);
+            EnableQuickAnims(isDebugEnabled);
+        }
+
+        void EnableQuickAnims(bool enable)
+        {
+            gameController.SkipAnims = enable;
         }
 
         void UpdateView()
         {
             if (background != null)
                 background.color = isDebugEnabled ? activeColor : normalColor;
+        }
+
+        void EnableDebugQuickRoundButton(bool enable)
+        {
+            if (enable)
+            {
+                var deck = FindObjectOfType<Deck>();
+                if (deck == null) return;
+
+                debugQuickRoundButton = Instantiate(debugQuickRoundButtonPrefab);
+                debugQuickRoundButton.transform.SetParent(deck.transform, false);
+                debugQuickRoundButton.transform.localScale = new Vector3(5f, 5f, 5f);
+
+                var debugQuickRoundButtonRectTransform = debugQuickRoundButton.GetComponent<RectTransform>();
+                debugQuickRoundButtonRectTransform.anchorMin = new Vector2(0.5f, 0f);
+                debugQuickRoundButtonRectTransform.anchorMax = new Vector2(0.5f, 0f);
+                debugQuickRoundButtonRectTransform.pivot = new Vector2(0.5f, 1f);
+                debugQuickRoundButtonRectTransform.anchoredPosition = new Vector2(0f, -220f);
+            }
+            else
+            {
+                Destroy(debugQuickRoundButton.gameObject);
+            }
         }
 
         void EnableDebugDrawAllCardsButton(bool enable)

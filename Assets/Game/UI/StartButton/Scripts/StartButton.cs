@@ -8,7 +8,7 @@ namespace Game
 {
     public partial class StartButton : MonoBehaviour
     {
-        public enum StartButtonState
+        enum StartButtonState
         {
             None,
             Start,
@@ -22,7 +22,7 @@ namespace Game
         bool isClicked = false;
 
         StartButtonState buttonState = StartButtonState.None;
-        public StartButtonState ButtonState
+        StartButtonState ButtonState
         {
             get => buttonState;
             set

@@ -75,18 +75,19 @@ namespace Game
                     break;
 
                 case GameState.Deck_Empty:
-                    //DeckEmpty(Next_Round); 
+                    DeckEmpty(newState); 
                     break;
             }
         }
 
+        void DeckEmpty(GameState newState)
+        {
+            SetState(newState);
+        }
+
         void NewRound(GameState newState)
         {
-            foreach (var card in createdCards)
-            {
-                objectPool.Return(card);
-            }
-            createdCards.Clear();
+            ResetRound();
 
             SetState(newState);
             TransitionToState(GameState.Show_Dealer_Card);
@@ -95,6 +96,9 @@ namespace Game
         void RoundEnded(GameState newState)
         {
             SetState(newState);
+
+            if (deck.IsEmpty())
+                TransitionToState(GameState.Deck_Empty);
         }
 
         void Tie(GameState newState)
@@ -134,9 +138,9 @@ namespace Game
             GameState nextState = isPlayerWon ? GameState.Player_Win : GameState.Dealer_Win;
 
             if (isPlayerWon)
-                playerArea.Score = playerArea.Score + 1;
+                playerArea.Score += 1;
             else
-                dealerArea.Score = playerArea.Score + 1;
+                dealerArea.Score += 1;
 
             SetState(newState);
             TransitionToState(nextState);
@@ -153,7 +157,7 @@ namespace Game
                 newState,
                 onComplete: (card) =>
                 {
-                    card.Flip(animate: true);
+                    card.Flip(animate: !SkipAnims);
                     SetState(newState);
                     TransitionToState(GameState.Resolve_Bet_Result);
                 });
@@ -165,7 +169,7 @@ namespace Game
                 newState,
                 onComplete: (card) =>
                 {
-                    card.Flip(animate: true);
+                    card.Flip(animate: !SkipAnims);
                     SetState(newState);
                     TransitionToState(GameState.Await_Player_Bet);
                 });
@@ -205,7 +209,7 @@ namespace Game
 
             card.View.Move(
                 cardTargetPos,
-                animate: true,
+                animate: !SkipAnims,
                 onComplete: () =>
                 {
                     onComplete?.Invoke(card);
@@ -229,6 +233,8 @@ namespace Game
 
         void StartGame(GameState newState)
         {
+            ResetRound();
+
             deck.ResetDeck();
             playerArea.Score = 0;
             dealerArea.Score = 0;
@@ -236,6 +242,17 @@ namespace Game
             SetState(newState);
 
             TransitionToState(GameState.New_Round);
+        }
+
+        void ResetRound()
+        {
+            playerBet = BetType.No_Bet;
+
+            foreach (var card in createdCards)
+            {
+                objectPool.Return(card);
+            }
+            createdCards.Clear();
         }
     }
 }

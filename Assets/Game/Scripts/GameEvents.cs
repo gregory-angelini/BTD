@@ -8,6 +8,7 @@ namespace Game
         public static event Action<BetType> OnBetPlacedEvent;
         public static event Action OnTryAgainEvent;
         public static event Action OnStartEvent;
+        public static event Action OnRestartEvent;
         public static event Action<int> OnDeckChangedEvent;
 
 
@@ -19,6 +20,11 @@ namespace Game
         public static void EmitStartEvent()
         {
             OnStartEvent?.Invoke();
+        }
+
+        public static void EmitRestartEvent()
+        {
+            OnRestartEvent?.Invoke();
         }
 
         public static void EmitTryAgainEvent()

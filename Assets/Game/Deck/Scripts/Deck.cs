@@ -17,7 +17,6 @@ namespace Game
         List<ItemChance<CardProfile>> originalChances = new();
         [SerializeField] CardView cardView;
         int weightScaleFactor;
-        bool isInitialized = false;
 
         public int Size => cardChances.Count;
 
@@ -36,14 +35,10 @@ namespace Game
                 .ToList();
 
             SetCardBack(deckConfig.BackSprite);
-            isInitialized = true;
         }
 
         public void ResetDeck()
         {
-            if (!isInitialized) 
-                return;
-
             cardChances.Clear();
             cardChances.AddRange(originalChances);
 

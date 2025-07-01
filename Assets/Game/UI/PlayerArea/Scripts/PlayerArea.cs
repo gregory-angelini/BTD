@@ -26,7 +26,7 @@ namespace Game
 
         public Vector2 CardSlotPositon()
         {
-            return cardSlot.localPosition;
+            return transform.localPosition + cardSlot.localPosition;
         }
     }
 }

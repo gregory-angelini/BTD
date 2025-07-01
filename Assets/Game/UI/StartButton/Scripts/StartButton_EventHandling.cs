@@ -47,8 +47,12 @@ namespace Game
             switch (buttonState)
             {
                 case StartButtonState.Start:
-                case StartButtonState.Restart:
                     GameEvents.EmitStartEvent();
+                    isClicked = true;
+                    break;
+
+                case StartButtonState.Restart:
+                    GameEvents.EmitRestartEvent();
                     isClicked = true;
                     break;
 

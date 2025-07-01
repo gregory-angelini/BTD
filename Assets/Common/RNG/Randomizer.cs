@@ -19,6 +19,11 @@ namespace Common
             return random.Next();
         }
 
+        public bool RandomBool()
+        {
+            return random.Next(2) == 1;
+        }
+
         public int RandomRange(int min, int max)
         {
             return random.Next(min, max);

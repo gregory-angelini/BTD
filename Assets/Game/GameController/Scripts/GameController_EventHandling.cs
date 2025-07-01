@@ -13,6 +13,7 @@ namespace Game
             GameEvents.OnBetPlacedEvent += OnBetPlaced;
             GameEvents.OnTryAgainEvent += OnTryAgain;
             GameEvents.OnStartEvent += OnStart;
+            GameEvents.OnRestartEvent += OnRestart;
         }
 
         void OnDisable()
@@ -20,10 +21,22 @@ namespace Game
             GameEvents.OnBetPlacedEvent -= OnBetPlaced;
             GameEvents.OnTryAgainEvent -= OnTryAgain;
             GameEvents.OnStartEvent -= OnStart;
+            GameEvents.OnRestartEvent -= OnRestart;
         }
 
         public void OnStart()
         {
+            if (CurrentState != GameState.Initialize)
+                return;
+
+            TransitionToState(GameState.Start);
+        }
+
+        public void OnRestart()
+        {
+            if (CurrentState != GameState.Deck_Empty)
+                return;
+
             TransitionToState(GameState.Start);
         }
 
@@ -39,6 +52,9 @@ namespace Game
 
         void OnTryAgain()
         {
+            if (CurrentState != GameState.Round_Ended)
+                return;
+
             TransitionToState(GameState.New_Round);
         }
     }
