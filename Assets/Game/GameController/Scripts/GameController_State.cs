@@ -225,8 +225,6 @@ namespace Game
                 deckConfig);
 
             SetState(newState);
-
-            TransitionToState(GameState.Start);
         }
 
         void StartGame(GameState newState)

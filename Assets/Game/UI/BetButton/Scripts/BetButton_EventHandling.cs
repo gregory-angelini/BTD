@@ -1,42 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game
 {
-    public class TryAgainButton : MonoBehaviour
+    public partial class BetButton
     {
-        [SerializeField] Button button;
-        bool isClicked = false;
-
-
         void OnEnable()
         {
             GameEvents.OnGameStateChangedEvent += OnGameStateChanged;
+            GameEvents.OnBetPlacedEvent += OnBetPlaced;
         }
 
         void OnDisable()
         {
             GameEvents.OnGameStateChangedEvent -= OnGameStateChanged;
+            GameEvents.OnBetPlacedEvent -= OnBetPlaced;
         }
 
         void OnGameStateChanged(GameState state)
         {
-            if (state == GameState.Round_Ended)
-            {
-                button.interactable = true;
-                ResetButton();
-            }
-            else
-            {
-                button.interactable = false;
-            }
-        }
+            button.interactable = state == GameState.Await_Player_Bet;
 
-        void ResetButton()
-        {
-            isClicked = false;
+            switch (state)
+            {
+                case GameState.Initialize:
+                case GameState.Start:
+                case GameState.New_Round:
+                    ResetButton();
+                    break;
+            }
         }
 
         public void OnClick()
@@ -46,7 +39,7 @@ namespace Game
 
             isClicked = true;
 
-            GameEvents.EmitTryAgainEvent();
+            GameEvents.EmitBetPlacedEvent(betType);
         }
     }
 }

@@ -12,12 +12,19 @@ namespace Game
         {
             GameEvents.OnBetPlacedEvent += OnBetPlaced;
             GameEvents.OnTryAgainEvent += OnTryAgain;
+            GameEvents.OnStartEvent += OnStart;
         }
 
         void OnDisable()
         {
             GameEvents.OnBetPlacedEvent -= OnBetPlaced;
             GameEvents.OnTryAgainEvent -= OnTryAgain;
+            GameEvents.OnStartEvent -= OnStart;
+        }
+
+        public void OnStart()
+        {
+            TransitionToState(GameState.Start);
         }
 
         void OnBetPlaced(BetType bet)
