@@ -12,6 +12,7 @@ namespace Game
         public GameState CurrentState { get; private set; }
         ObjectPool<Card> objectPool = new();
         [SerializeField] Card cardPrefab;
+        [SerializeField] BetResultPopup betResultPopup;
         BetType playerBet = BetType.No_Bet;
         Card playerCard;
         Card dealerCard;
@@ -103,18 +104,27 @@ namespace Game
 
         void Tie(GameState newState)
         {
+            betResultPopup.Text = "Tie!";
+            betResultPopup.Play();
+
             SetState(newState);
             TransitionToState(GameState.Round_Ended);
         }
 
         void PlayerWin(GameState newState)
         {
+            betResultPopup.Text = "You Win!";
+            betResultPopup.Play();
+
             SetState(newState);
             TransitionToState(GameState.Round_Ended);
         }
 
         void DealerWin(GameState newState)
         {
+            betResultPopup.Text = "Dealer Win";
+            betResultPopup.Play();
+
             SetState(newState);
             TransitionToState(GameState.Round_Ended);
         }
