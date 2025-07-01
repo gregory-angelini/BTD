@@ -75,12 +75,12 @@ namespace Game
 
         public void Flip(bool animate)
         {
-            if (!IsFaceUp)
+            isFaceUp = !IsFaceUp;
+
+            if (IsFaceUp)
                 View.Flip(animate, CardProfile.FaceSprite);
             else
                 View.Flip(animate, View.BackSprite);
-
-            isFaceUp = !IsFaceUp;
         }
 
         [ContextMenu("Flip Test")]

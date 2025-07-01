@@ -12,10 +12,12 @@ namespace Game
         [SerializeField] Color defaultColor = Color.white;
         [SerializeField] Color selectedColor = Color.green;
         [SerializeField] Image background;
-
+        bool isClicked = false;
         
+
         void ResetButton()
         {
+            isClicked = false;
             background.color = defaultColor;
         }
 
@@ -47,6 +49,11 @@ namespace Game
 
         public void OnClick()
         {
+            if (isClicked)
+                return;
+
+            isClicked = true;
+
             GameEvents.EmitBetPlacedEvent(betType);
         }
 

@@ -76,12 +76,13 @@ namespace Game
                         cardImage.sprite = sprite;
 
                         transform
-                        .DOLocalRotate(new Vector3(0f, 90f, 0f), halfDuration)
-                        .SetEase(visualSettings.CardFlipEase)
-                        .OnComplete(() =>
-                        {
-                            transform.localRotation = Quaternion.identity;              
-                        });
+                            .DOLocalRotate(new Vector3(0f, 360f, 0f), halfDuration)
+                            .From(new Vector3(0f, 270f, 0f))
+                            .SetEase(visualSettings.CardFlipEase)
+                            .OnComplete(() =>
+                            {
+                                transform.localRotation = Quaternion.identity;
+                            });
                     });
             }
             else

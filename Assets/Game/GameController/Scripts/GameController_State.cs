@@ -12,8 +12,6 @@ namespace Game
         public GameState CurrentState { get; private set; }
         ObjectPool<Card> objectPool = new();
         [SerializeField] Card cardPrefab;
-        [SerializeField] Transform playerSide;
-        [SerializeField] Transform dealerSide;
         BetType playerBet = BetType.No_Bet;
         Card playerCard;
         Card dealerCard;
@@ -23,7 +21,7 @@ namespace Game
         void SetState(GameState newState)
         {
             CurrentState = newState;
-            Debug.Log($"Game State: {newState.ToString()}");
+            Debug.Log($"Game State: {newState}");
 
             GameEvents.EmitGameStateChangedEvent(newState);
         }
@@ -135,6 +133,11 @@ namespace Game
 
             GameState nextState = isPlayerWon ? GameState.Player_Win : GameState.Dealer_Win;
 
+            if (isPlayerWon)
+                playerArea.Score = playerArea.Score + 1;
+            else
+                dealerArea.Score = playerArea.Score + 1;
+
             SetState(newState);
             TransitionToState(nextState);
         }
@@ -187,17 +190,17 @@ namespace Game
             switch (newState)
             {
                 case GameState.Show_Dealer_Card:
-                    cardTargetPos = dealerSide.localPosition;
+                    cardTargetPos = dealerArea.CardSlotPositon();
                     dealerCard = card;
                     break;
 
                 case GameState.Show_Player_Card:
                     playerCard = card;
-                    cardTargetPos = playerSide.localPosition;
+                    cardTargetPos = playerArea.CardSlotPositon();
                     break;
 
                 default:
-                    throw new ArgumentException($"Game state ({newState.ToString()}) is invalid.");
+                    throw new ArgumentException($"Game state ({newState}) is invalid.");
             }
 
             card.View.Move(
@@ -229,6 +232,8 @@ namespace Game
         void StartGame(GameState newState)
         {
             deck.ResetDeck();
+            playerArea.Score = 0;
+            dealerArea.Score = 0;
 
             SetState(newState);
 

@@ -8,6 +8,8 @@ namespace Game
     public class TryAgainButton : MonoBehaviour
     {
         [SerializeField] Button button;
+        bool isClicked = false;
+
 
         void OnEnable()
         {
@@ -21,11 +23,29 @@ namespace Game
 
         void OnGameStateChanged(GameState state)
         {
-            button.interactable = state == GameState.Round_Ended;
+            if (state == GameState.Round_Ended)
+            {
+                button.interactable = true;
+                ResetButton();
+            }
+            else
+            {
+                button.interactable = false;
+            }
+        }
+
+        void ResetButton()
+        {
+            isClicked = false;
         }
 
         public void OnClick()
         {
+            if (isClicked)
+                return;
+
+            isClicked = true;
+
             GameEvents.EmitTryAgainEvent();
         }
     }

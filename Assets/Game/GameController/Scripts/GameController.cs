@@ -13,6 +13,8 @@ namespace Game
         [SerializeField] VisualSettingsProfile visualSettings;
         [SerializeField] Deck deck;
         [SerializeField] DeckProfile deckConfig;
+        [SerializeField] PlayerArea playerArea;
+        [SerializeField] PlayerArea dealerArea;
 
 
         void Start()
