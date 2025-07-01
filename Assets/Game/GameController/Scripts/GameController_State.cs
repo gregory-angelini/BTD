@@ -97,6 +97,11 @@ namespace Game
         void RoundEnded(GameState newState)
         {
             SetState(newState);
+            
+            if (deck.IsEmpty())
+            {
+                TransitionToState(GameState.Deck_Empty);
+            }
         }
 
         void Tie(GameState newState)

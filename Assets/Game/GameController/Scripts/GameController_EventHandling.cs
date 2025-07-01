@@ -14,7 +14,6 @@ namespace Game
             GameEvents.OnTryAgainEvent += OnTryAgain;
             GameEvents.OnStartEvent += OnStart;
             GameEvents.OnRestartEvent += OnRestart;
-            GameEvents.OnDeckChangedEvent += OnDeckChanged;
         }
 
         void OnDisable()
@@ -23,15 +22,8 @@ namespace Game
             GameEvents.OnTryAgainEvent -= OnTryAgain;
             GameEvents.OnStartEvent -= OnStart;
             GameEvents.OnRestartEvent -= OnRestart;
-            GameEvents.OnDeckChangedEvent -= OnDeckChanged;
         }
 
-        void OnDeckChanged(int newSize)
-        {
-            if (newSize == 0)
-                TransitionToState(GameState.Deck_Empty);
-        }
-        
         void OnStart()
         {
             if (CurrentState != GameState.Initialize)
